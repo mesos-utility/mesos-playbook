@@ -1,0 +1,32 @@
+---
+# file:roles/mesos/tasks/main.yml
+
+- name: Install mesos software
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "yum install -y mesos.x86_64 --nogpgcheck"
+  ignore_errors: yes
+
+- name: Make dir for mesos-master
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "mkdir -p {{ program_dir }}/mesos-master"
+    - "mkdir -p {{ program_dir }}/mesos-master/{data,log}"
+  when: mesos_install_mode == "master"
+  ignore_errors: yes
+
+- name: Copy mesos_control to remote host
+  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-master/mesos_control mode=755
+  when: mesos_install_mode == "master"
+
+- name: Make dir for mesos-slave
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "mkdir -p {{ program_dir }}/mesos-slave"
+    - "mkdir -p {{ program_dir }}/mesos-slave/{data,log}"
+  when: mesos_install_mode == "slave"
+  ignore_errors: yes
+
+- name: Copy mesos_control to remote host
+  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-slave/mesos_control mode=755
+  when: mesos_install_mode == "slave"

@@ -1,0 +1,4 @@
+---
+# file:roles/mesos/vars/main.yml
+
+module: mesos
