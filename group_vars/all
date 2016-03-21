@@ -1,2 +1,20 @@
 ---
 # Variables here are applicable to all host groups
+opbin_dir: "/opt/opbin"
+opdir_dir: "/opt/opdir"
+program_dir: "/opt/work"
+opt_log_dir: "/opt/log"
+
+deploy_user: "root"
+deploy_root: "/opt/work"
+download_url: "10.10.11.47/www/mesos-cluster"
+
+# falcon-agent url
+falcon_heartbeat_url: "10.10.11.34:6030"
+falcon_transfer_url: "10.10.11.34:8433"
+
+cluster_name: "mesoscluster"
+# zk cluster url
+zookeeper_client_port: "2181"
+zookeeper_url: "zk://{% for host in groups['zookeepers'] %}{{ hostvars[host].ansible_ssh_host }}:{{ zookeeper_client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+#zookeeper_url: "zk://{{ groups.zookeepers | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}"
