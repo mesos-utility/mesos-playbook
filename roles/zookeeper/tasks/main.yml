@@ -1,9 +1,24 @@
 ---
 # file:roles/zookeeper/tasks/main.yml
 
-- name: ls {{ module }}
-  shell: "su -l {{ deploy_user }} -c 'cd {{ deploy_root }}/ && ls -l'"
+- name: Install jdk for {{ module }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "yum install -y java-1.8.0-openjdk.x86_64"
   ignore_errors: yes
 
 - name: init zookeeper cluster.
   script: ../files/init_zookeeper.sh
+
+#- name: Copy init_zookeeper to remote host
+#  copy: src=../files/init_zookeeper.sh dest={{ program_dir }}/init_zookeeper.sh mode=755
+#  copy: src=../files/init_zookeeper.sh dest=/opt/opdir/init_zookeeper.sh mode=755
+
+#- name: Install {{ module }}
+#  shell: chdir=/opt {{ item }}
+#  with_items:
+#    - "cd {{ program_dir }} && bash init_zookeeper.sh"
+#  ignore_errors: yes
+
+- name: Setup {{ module }} cfg file.
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf.dist/zoo.cfg mode=0644

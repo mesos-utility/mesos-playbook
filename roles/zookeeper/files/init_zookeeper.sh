@@ -15,18 +15,18 @@ fi
 
 ######## change zookeeper data dir.
 mkdir -p ${prefixdir}/{data,log}
-sed -i "s#dataDir=.*#dataDir=${prefixdir}/data#" "${zoocfg}"
+#sed -i "s#dataDir=.*#dataDir=${prefixdir}/data#" "${zoocfg}"
 
 sed -i "s#export ZOO_LOG_DIR=.*#export ZOO_LOG_DIR=\${ZOO_LOG_DIR:-${prefixdir}/log}#" /usr/bin/zookeeper-server
 
 ######## set zookeeper cluster ip.
-sed -i '/2888:3888/d' "${zoocfg}"
-
-cat >> "${zoocfg}" <<EOF
-server.3=10.10.11.3:2888:3888
-server.4=10.10.11.4:2888:3888
-server.5=10.10.11.5:2888:3888
-EOF
+#sed -i '/2888:3888/d' "${zoocfg}"
+#
+#cat >> "${zoocfg}" <<EOF
+#server.3=10.10.11.3:2888:3888
+#server.4=10.10.11.4:2888:3888
+#server.5=10.10.11.5:2888:3888
+#EOF
 
 ######## initialize zookeeper myid
 myid=`ifconfig | grep "inet addr:10\." | grep -oP "((\d+\.)){3}(\d+)" | head -n 1 | awk -F\. '{print $NF}'`
