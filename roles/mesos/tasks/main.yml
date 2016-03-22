@@ -1,32 +1,41 @@
 ---
-# file:roles/mesos/tasks/main.yml
+# file:roles/common/tasks/main.yml
 
+############## setup for all mesos cluster host
 - name: Install mesos software
   shell: chdir=/opt {{ item }}
   with_items:
     - "yum install -y mesos.x86_64 --nogpgcheck"
   ignore_errors: yes
 
-- name: Make dir for mesos-master
+- name: Make dir for mesos-{{ mesos_install_mode }}
   shell: chdir=/opt {{ item }}
   with_items:
-    - "mkdir -p {{ program_dir }}/mesos-master"
-    - "mkdir -p {{ program_dir }}/mesos-master/{data,log}"
-  when: mesos_install_mode == "master"
+    - "mkdir -p {{ program_dir }}/mesos-{{ mesos_install_mode }}"
+    - "mkdir -p {{ program_dir }}/mesos-{{ mesos_install_mode }}/{data,log,store}"
   ignore_errors: yes
 
 - name: Copy mesos_control to remote host
-  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-master/mesos_control mode=755
+  template: src=mesos_control.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos_control mode=0755
+
+#- name: Copy mesos_control to remote host
+#  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos_control mode=755
+
+############## Setup supervisor conf.
+- name: Setup supervisor conf for {{ module }}-{{ mesos_install_mode }}
+  template: src=supervisord.conf.master.j2 dest=/etc/supervisord.conf mode=0644
   when: mesos_install_mode == "master"
 
-- name: Make dir for mesos-slave
-  shell: chdir=/opt {{ item }}
-  with_items:
-    - "mkdir -p {{ program_dir }}/mesos-slave"
-    - "mkdir -p {{ program_dir }}/mesos-slave/{data,log}"
+############## Setup supervisor conf.
+- name: Setup supervisor conf for {{ module }}-{{ mesos_install_mode }}
+  template: src=supervisord.conf.slave.j2 dest=/etc/supervisord.conf mode=0644
   when: mesos_install_mode == "slave"
-  ignore_errors: yes
 
-- name: Copy mesos_control to remote host
-  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-slave/mesos_control mode=755
-  when: mesos_install_mode == "slave"
+####################################################################
+#- name: Start server for {{module}}-{{mesos_install_mode}}
+#  shell: chdir=/opt {{ item }}
+#  with_items:
+#    - "/etc/init.d/supervisord restart"
+#    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
+#  ignore_errors: yes
+
