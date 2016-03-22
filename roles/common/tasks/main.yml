@@ -1,0 +1,20 @@
+---
+# file:roles/common/tasks/main.yml
+
+- name: make dir for opbin/opdir/work
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - mkdir -p /opt/{opbin,opdir,work}
+  ignore_errors: yes
+
+- name: install falcon-agent
+  shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && wget -N 10.10.11.47/www/mesos-cluster/falcon-agent/agent.tar.gz && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
+  ignore_errors: yes
+
+- name: setup falcon transfer url
+  template: src=cfg.json.j2 dest={{ opbin_dir }}/agent/cfg.json mode=0644
+
+- name: install supervisor for all hosts
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "cd {{ opdir_dir }} && rm -rf supervisor && git clone https://github.com/Open-Party/supervisor.git && cd supervisor/ && bash supervisor-install.sh"
