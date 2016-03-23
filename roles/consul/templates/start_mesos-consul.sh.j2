@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+#set -x
+{{ 'export PS4="+ [`basename ${BASH_SOURCE[0]}`:$LINENO ${FUNCNAME[0]} \D{%F %T} $$ ] "' }}
+
+MYNAME="${0##*/}"
+PROG="mesos-consul"
+CURDIR=$(cd "$(dirname "$0")"; pwd)
+PIDFILE="/var/run/${PROG}.pid"
+LOGFILE="{{ opt_log_dir }}/${PROG}.log"
+EXEC="$PROG"
+ACTION=""
+
+ZK_INFO="{{ zookeeper_url }}/mesos"
+
+"$CURDIR/mesos-consul" --zk=${ZK_INFO} --refresh=30s --mesos-ip-order=mesos,host,docker
+

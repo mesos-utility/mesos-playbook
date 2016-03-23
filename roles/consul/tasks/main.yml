@@ -1,0 +1,51 @@
+---
+# file:roles/consul/tasks/main.yml
+
+- name: Install consul for consul-{{ consul_install_mode }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "[ -d {{program_dir}}/consul-{{consul_install_mode}} ] || ( mkdir -p {{program_dir}}/{{module}}-{{consul_install_mode}} && cd {{program_dir}} && wget -N {{download_url}}/{{module}}/{{module}}.tar.gz && tar -zxf {{module}}.tar.gz -C ./consul-{{consul_install_mode}} && rm -rf {{module}}.tar.gz )"
+  ignore_errors: yes
+
+############## setup for server
+# mesos-consul
+- name: Install mesos-consul for consul-{{ consul_install_mode }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "[ -d {{program_dir}}/mesos-consul ] || ( mkdir -p {{program_dir}}/mesos-consul && cd {{program_dir}}/ && wget -N {{download_url}}/{{module}}/mesos-consul.tar.gz && tar -zxf mesos-consul.tar.gz && rm -rf mesos-consul.tar.gz )"
+  when: consul_install_mode == "server"
+  ignore_errors: yes
+
+- name: Setup mesos-consul control script.
+  template: src=start_mesos-consul.sh.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/ mode=0644
+  when: consul_install_mode == "server"
+
+# supervisor
+- name: Setup supervisor conf for consul-{{ consul_install_mode }}
+  template: src=supervisord.conf.server.j2 dest=/etc/supervisord.conf mode=0644
+  when: consul_install_mode == "server"
+
+####################################################################
+- name: Consul join for consul-{{ consul_install_mode }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "/etc/init.d/supervisord restart"
+    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
+  when: consul_install_mode == "server"
+  ignore_errors: yes
+
+
+############## XXX: consul agent supervisor configure file setup at roles: mesos slave mode.
+############## XXX: consul agent server start at roles: mesos slave mode.
+#- name: Setup supervisor conf for consul-{{ consul_install_mode }}
+#  template: src=supervisord.conf.agent.j2 dest=/etc/supervisord.conf.agent mode=0644
+#  when: consul_install_mode == "agent"
+#
+#- name: Consul join for consul-{{ consul_install_mode }}
+#  shell: chdir=/opt {{ item }}
+#  with_items:
+#    - "/etc/init.d/supervisord restart"
+#    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
+#  when: consul_install_mode == "agent"
+#  ignore_errors: yes
+
