@@ -1,0 +1,4 @@
+---
+# file:roles/marathon/vars/main.yml
+
+module: marathon

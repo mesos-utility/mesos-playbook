@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+#set -x
+{{ 'export PS4="+ [`basename ${BASH_SOURCE[0]}`:$LINENO ${FUNCNAME[0]} \D{%F %T} $$ ] "' }}
+
+MYNAME="${0##*/}"
+CURDIR=$(cd "$(dirname "$0")"; pwd)
+
+chmod +x ${CURDIR}/bin/start
+MYIP=`ifconfig | grep "inet addr:10\." | grep -oP "((\d+\.)){3}(\d+)" | head -n 1`
+
+export MESOSPHERE_HTTP_CREDENTIALS="soarpenguin:tests"
+${CURDIR}/bin/start --master {{zookeeper_url}}/mesos \
+  --zk {{zookeeper_url}}/marathon  \
+  --hostname "${MYIP}"
