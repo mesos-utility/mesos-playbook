@@ -1,0 +1,5 @@
+---
+# file:roles/docker/tasks/main.yml
+
+- name: init docker env for slaves.
+  script: ../files/init_docker.sh

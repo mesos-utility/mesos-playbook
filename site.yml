@@ -27,4 +27,5 @@
   roles:
     - { role: common, tags: ["common"] }
     - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
-    - { role: mesos, mesos_install_mode: "slave", tags: ["slave"] }
+    - { role: mesos,  mesos_install_mode: "slave", tags: ["slave"] }
+    - { role: docker, tags: ["docker"] }
