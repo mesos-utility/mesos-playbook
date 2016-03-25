@@ -1,5 +1,13 @@
 ---
 # file:roles/docker/tasks/main.yml
 
-- name: init docker env for slaves.
-  script: ../files/init_docker.sh
+#- name: Init docker env for slaves.
+#  script: ../files/init_docker.sh
+
+- name: Copy script to remote host for {{ module }}
+  template: src=init_docker.sh.j2 dest={{ opdir_dir }}/init_docker.sh mode=0755
+
+- name: Install jdk for {{ module }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "cd {{ opdir_dir }}/ && bash init_docker.sh"

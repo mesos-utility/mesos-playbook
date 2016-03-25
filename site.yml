@@ -2,19 +2,20 @@
 # Site Configuration
 # ==================
 
-- hosts: mesos_masters
-  user: root
-  roles:
-    - { role: common, tags: ["common"] }
-    - { role: marathon, tags: ["marathon"] }
-    - { role: mesos, mesos_install_mode: "master", tags: ["master"] }
-
 - hosts: zookeepers
   user: root
   roles:
     - { role: common, tags: ["common"] }
     - { role: zookeeper, tags: ["zookeeper"] }
     - { role: consul, consul_install_mode: "server", tags: ["server"] }
+
+- hosts: mesos_masters
+  user: root
+  roles:
+    - { role: common, tags: ["common"] }
+    - { role: marathon, tags: ["marathon"] }
+    - { role: mesos, mesos_install_mode: "master", tags: ["master"] }
+    - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
 
 - hosts: nginxs
   user: root
@@ -26,6 +27,6 @@
   user: root
   roles:
     - { role: common, tags: ["common"] }
-    - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
     - { role: mesos,  mesos_install_mode: "slave", tags: ["slave"] }
+    - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
     - { role: docker, tags: ["docker"] }

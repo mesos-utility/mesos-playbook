@@ -7,7 +7,7 @@
     - "yum install -y java-1.8.0-openjdk.x86_64"
 
 - name: Install {{ module }}
-  shell: "su -l {{ deploy_user }} -c ' [ -d {{ program_dir }}/{{ module }} ] || ( cd {{ program_dir }} && wget -N {{ download_url }}/{{ module }}/{{ module }}.tar.gz && tar -zxvf {{ module }}.tar.gz && rm -rf {{ module }}.tar.gz ) '"
+  shell: "su -l {{ deploy_user }} -c ' [ -d {{ program_dir }}/{{ module }} ] || ( cd {{ program_dir }} && wget -N {{ download_url }}/www/mesos-cluster/{{ module }}/{{ module }}.tar.gz && tar -zxvf {{ module }}.tar.gz && rm -rf {{ module }}.tar.gz ) '"
 #  ignore_errors: yes
 
 - name: Setup mesos master zk info for {{ module }}
