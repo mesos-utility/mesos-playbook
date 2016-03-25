@@ -23,12 +23,11 @@
 
 ############## Setup supervisor conf.
 - name: Setup supervisor conf for {{ module }}-{{ mesos_install_mode }}
-  template: src=supervisord.conf.master.j2 dest=/etc/supervisord.conf mode=0644
-  when: mesos_install_mode == "master"
+  template: src=supervisord.conf.{{ mesos_install_mode }}.j2 dest=/etc/supervisord.conf.{{ mesos_install_mode }} mode=0644
 
-############## Setup supervisor conf.
-- name: Setup supervisor conf for {{ module }}-{{ mesos_install_mode }}
-  template: src=supervisord.conf.slave.j2 dest=/etc/supervisord.conf mode=0644
+############## Setup mesos attribute.
+- name: Setup mesos attribute for {{ module }}-{{ mesos_install_mode }}
+  template: src=mesos.conf.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos.conf mode=0644
   when: mesos_install_mode == "slave"
 
 ####################################################################
@@ -38,4 +37,3 @@
 #    - "/etc/init.d/supervisord restart"
 #    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
 #  ignore_errors: yes
-

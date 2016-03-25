@@ -1,6 +1,0 @@
----
-# file:roles/mesos/handlers/main.yml
-
-- name: ls {{ module }}
-  shell: "su -l {{ deploy_user }} -c 'cd {{ deploy_root }}/ && ls -l'"
-  ignore_errors: yes

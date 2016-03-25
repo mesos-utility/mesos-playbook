@@ -8,7 +8,7 @@
   ignore_errors: yes
 
 - name: install falcon-agent
-  shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && wget -N 10.10.11.47/www/mesos-cluster/falcon-agent/agent.tar.gz && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
+  shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && wget -N {{download_url}}/www/mesos-cluster/falcon-agent/agent.tar.gz && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
   ignore_errors: yes
 
 - name: setup falcon transfer url

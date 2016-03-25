@@ -19,3 +19,5 @@ zookeeper_client_port: "2181"
 zookeeper_url: "zk://{% for host in groups['zookeepers'] %}{{ hostvars[host].ansible_ssh_host }}:{{ zookeeper_client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
 #zookeeper_url: "zk://{{ groups.zookeepers | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}"
 consul_leader_ip: "{{ hostvars[groups['zookeepers'][0]]['ansible_ssh_host'] }}"
+
+mesos_slave_attr: "cluster:public-idc"
