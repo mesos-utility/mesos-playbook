@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# install nginx
+#mkdir /opt/{opdir,work,opbin}
+cd {{opdir_dir}} && wget -N {{download_url}}/www/mesosNginx/nginx.tar.gz && tar -zxvf nginx.tar.gz -C {{program_dir}}
+
+# install pcre
+cd {{opdir_dir}} && wget -N {{download_url}}/www/mesosNginx/pcre-8.35.tar.gz && tar -zxvf pcre-8.35.tar.gz && cd pcre-8.35 && ./configure &&  make && make install
+ln -s /usr/local/lib/libpcre.so.1 /lib64/libpcre.so.1
+
+# add user www
+useradd www 
+mkdir -p {{opt_log_dir}}/{{module}}/{access,error}
+#cd {{program_dir}}/nginx && ./sbin/nginx
+

@@ -1,0 +1,10 @@
+---
+# file:roles/nginx/tasks/main.yml
+
+- name: Copy script to remote host.
+  template: src=ngxinstall.sh.j2 dest={{ opdir_dir }}/ngxinstall.sh mode=0755
+
+- name: Install {{ module }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "cd {{opdir_dir}} && bash ngxinstall.sh"
