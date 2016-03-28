@@ -11,3 +11,18 @@
   shell: chdir=/opt {{ item }}
   with_items:
     - "cd {{ opdir_dir }}/ && bash init_docker.sh"
+
+- name: Install docker metrics collector for mesos-slave.
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "cd {{ opbin_dir }}/ && wget -N {{ download_url }}/docker-metrics/docker-metrics.tar.gz && tar -zxf docker-metrics.tar.gz && rm -rf docker-metrics.tar.gz "
+  ignore_errors: yes
+
+- name: Setup docker-metrics conf.
+  template: src=docker-metrics.cfg.json.j2 dest={{opbin_dir}}/docker-metrics/cfg.json mode=0644
+
+- name: Start docker metrics collector for mesos-slave.
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "cd {{ opbin_dir }}/docker-metrics && bash ./control restart"
+  ignore_errors: yes
