@@ -4,7 +4,9 @@
 - name: make dir for opbin/opdir/work
   shell: chdir=/opt {{ item }}
   with_items:
-    - mkdir -p /opt/{opbin,opdir,work}
+    - mkdir -p {{ opbin_dir }}
+    - mkdir -p {{ opdir_dir }}
+    - mkdir -p {{ program_dir }}
   ignore_errors: yes
 
 - name: install falcon-agent
