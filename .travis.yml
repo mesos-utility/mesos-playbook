@@ -1,13 +1,7 @@
 language: python
 
 sudo: required
-
-env:
-    - PYTHON=2.7 DEPS=full
-    - PYTHON=2.7 DEPS=nodata
-    - PYTHON=3.5 DEPS=full
-    - PYTHON=2.6 DEPS=full
-    - PYTHON=2.7 DEPS=minimal
+python: "2.7"
 
 before_install:
   - sudo apt-get update -qq
