@@ -1,0 +1,25 @@
+language: python
+
+# Use container-based infrastructure
+sudo: false
+
+env:
+    - PYTHON=2.7 DEPS=full
+    - PYTHON=2.7 DEPS=nodata
+    - PYTHON=3.5 DEPS=full
+    - PYTHON=2.6 DEPS=full
+    - PYTHON=2.7 DEPS=minimal
+
+python: "2.7"
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt
+
+install:
+  - pip install ansible==1.9.1
+
+script:
+  - chmod +x ansible-tests.sh
+  - bash ansible-tests.sh
+
