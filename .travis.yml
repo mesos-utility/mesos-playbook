@@ -11,6 +11,6 @@ install:
   - pip install ansible==1.9.1
 
 script:
-  - chmod +x ansible-tests.sh
   - bash ansible-tests.sh
+  - ansible-playbook --syntax-check --list-tasks -i hosts site.yml
 
