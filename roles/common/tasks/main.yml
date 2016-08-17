@@ -16,9 +16,18 @@
 - name: setup falcon transfer url
   template: src=cfg.json.j2 dest={{ opbin_dir }}/agent/cfg.json mode=0644
 
-- name: install supervisor for all hosts
+- name: copy monit to remote machine
+  copy: src=monit.tar.gz dest={{ program_dir }} mode=644
+
+- name: install monit for all hosts
   shell: chdir=/opt {{ item }}
   with_items:
-    - "cd {{ opdir_dir }} && rm -rf supervisor && git clone https://github.com/Open-Party/supervisor.git && cd supervisor/ && bash supervisor-install.sh"
-    - "mkdir -p {{ opt_log_dir }}/supervisor"
-    - "bash {{ opbin_dir }}/agent/control restart"
+    - "cd {{ program_dir }} && tar -zxvf monit.tar.gz && rm -rf monit.tar.gz"
+    - "mkdir -p {{ opt_log_dir }}/monit"
+
+#- name: install supervisor for all hosts
+#  shell: chdir=/opt {{ item }}
+#  with_items:
+#    - "cd {{ opdir_dir }} && rm -rf supervisor && git clone https://github.com/Open-Party/supervisor.git && cd supervisor/ && bash supervisor-install.sh"
+#    - "mkdir -p {{ opt_log_dir }}/supervisor"
+#    - "bash {{ opbin_dir }}/agent/control restart"
