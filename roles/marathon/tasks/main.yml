@@ -10,5 +10,8 @@
   shell: "su -l {{ deploy_user }} -c ' [ -d {{ program_dir }}/{{ module }} ] || ( cd {{ program_dir }} && wget -N {{ download_url }}/www/mesos-cluster/{{ module }}/{{ module }}.tar.gz && tar -zxvf {{ module }}.tar.gz && rm -rf {{ module }}.tar.gz ) '"
 #  ignore_errors: yes
 
-- name: Setup mesos master zk info for {{ module }}
+- name: Copy start_marathon.sh to machine for {{ module }}
   template: src=start_marathon.sh.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/start_marathon.sh mode=0644
+
+- name: Copy marathon_control to machine for {{ module }}
+  template: src=marathon_control.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/marathon_control.sh mode=0755
