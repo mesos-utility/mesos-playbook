@@ -10,7 +10,7 @@
 - name: Install consul for consul-{{ consul_install_mode }}
   shell: chdir=/opt {{ item }}
   with_items:
-    - "[ -d {{program_dir}}/consul-{{consul_install_mode}} ] || ( mkdir -p {{program_dir}}/{{module}}-{{consul_install_mode}} && cd {{program_dir}} && tar -zxf {{module}}.tar.gz -C ./consul-{{consul_install_mode}} && rm -rf {{module}}.tar.gz )"
+    - "[ -f {{program_dir}}/consul-{{consul_install_mode}}/consul/consul ] || ( mkdir -p {{program_dir}}/{{module}}-{{consul_install_mode}} && cd {{program_dir}} && tar -zxf {{module}}.tar.gz -C ./consul-{{consul_install_mode}} && rm -rf {{module}}.tar.gz )"
   ignore_errors: yes
 
 
@@ -30,9 +30,25 @@
   template: src=mesos-consul_control.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/mesos-consul_control mode=0755
   when: consul_install_mode == "server"
 
-- name: Setup mesos-consul control script.
+- name: Setup start_mesos-consul control script.
   template: src=start_mesos-consul.sh.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/start_mesos-consul.sh mode=0755
   when: consul_install_mode == "server"
+
+############## setup monit conf
+# monit
+- name: Setup monit conf for consul-{{ consul_install_mode }}
+  template: src=monit.zk.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  when: consul_install_mode == "server"
+
+# monit
+- name: Setup monit conf for consul-{{ consul_install_mode }}
+  template: src=monit.slave.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  when: consul_install_mode == "agent" and mesos_install_mode == "slave"
+
+# monit
+- name: Setup monit conf for consul-{{ consul_install_mode }}
+  template: src=monit.master.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  when: consul_install_mode == "agent" and mesos_install_mode == "master"
 
 # supervisor
 - name: Setup supervisor conf for consul-{{ consul_install_mode }}
@@ -43,9 +59,10 @@
 - name: Consul join for consul-{{ consul_install_mode }}
   shell: chdir=/opt {{ item }}
   with_items:
-    - "/etc/init.d/supervisord restart"
+#    - "/etc/init.d/supervisord restart"
+    - "{{ program_dir }}/monit/monit_control start"
+    - "{{ program_dir }}/consul-{{ consul_install_mode }}/{{ module }}/consul_control start"
     - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
-  when: consul_install_mode == "server"
   ignore_errors: yes
 
 
