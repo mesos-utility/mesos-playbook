@@ -76,7 +76,7 @@ set logfile /var/log/monit.log
 # set mailserver mail.bar.baz,               # primary mailserver
 #                backup.bar.baz port 10025,  # backup mailserver on port 10025
 #                localhost                   # fallback relay
- set mailserver 10.103.18.113,               # primary mailserver
+ set mailserver  {{ mailserver }}               # primary mailserver
 #
 #
 ## By default Monit will drop alert events if no mail servers are available. 
@@ -139,7 +139,7 @@ set logfile /var/log/monit.log
 ## This filter is recommended to avoid getting alerts for trivial cases.
 #
 # set alert your-name@your.domain not on { instance, action }
- set alert soarpenguin@gmail.com on { instance, action, connection, pid, status }
+ set alert {{ alert_mail }} on { instance, action, connection, pid, status }
 #
 #
 ## Monit has an embedded HTTP interface which can be used to view status of 

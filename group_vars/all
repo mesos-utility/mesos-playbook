@@ -6,6 +6,10 @@ opbin_dir: "/opt/opbin"
 opdir_dir: "/opt/opdir"
 opt_log_dir: "/opt/log"
 
+# mail setting in monit configure file.
+alert_mail: "soarpenguin@gmail.com"
+mailserver: "10.10.1.3"
+
 deploy_user: "root"
 deploy_root: "/opt/work"
 download_url: "http://10.10.11.47"
