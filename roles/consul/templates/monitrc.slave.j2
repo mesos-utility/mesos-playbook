@@ -214,24 +214,17 @@ set logfile /var/log/monit.log
 #    group server
 #    
     check process consul with pidfile /var/run/consul.pid
-        start program = "{{ program_dir }}/consul-server/consul/consul_control -t server start" with timeout 60 seconds
-        stop program = "{{ program_dir }}/consul-server/consul/consul_control -t server stop"
+        start program = "{{ program_dir }}/consul-agent/consul/consul_control -t agent start" with timeout 60 seconds
+        stop program = "{{ program_dir }}/consul-agent/consul/consul_control -t agent stop"
 	#if failed port 514 for 3 cycles then restart
-#
-    check process zookeeper with pidfile /var/run/zookeeper/zookeeper-server.pid
-        start program = "/etc/init.d/zookeeper-server start" with timeout 60 seconds
-        stop program = "/etc/init.d/zookeeper-server stop"
-        restart program = "/etc/init.d/zookeeper-server restart"
-	if failed port 2181 for 3 cycles then restart
 
-    check process mesos-consul with pidfile /var/run/mesos-consul.pid
-        start program = "{{ program_dir }}/mesos-consul/mesos-consul/mesos-consul_control start" with timeout 60 seconds
-        stop program = "{{ program_dir }}/mesos-consul/mesos-consul/mesos-consul_control stop"
+    check process mesos with pidfile /var/run/mesos.pid
+        start program = "{{ program_dir }}/mesos-slave/mesos_control -t slave start" with timeout 60 seconds
+        stop program = "{{ program_dir }}/mesos-slave/mesos_control -t slave stop"
 
-    check process nginx with pidfile {{ program_dir }}/nginx/logs/nginx.pid
-        start program = "{{ program_dir }}/nginx/sbin/nginx" with timeout 60 seconds
-        stop program = "{{ program_dir }}/nginx/sbin/nginx -s stop"
-
+    check process docker with pidfile /var/run/docker.pid
+        start program = "/etc/init.d/docker start" with timeout 60 seconds
+        stop program = "/etc/init.d/docker stop"
 #
 #    
 ## Check filesystem permissions, uid, gid, space and inode usage. Other services,
