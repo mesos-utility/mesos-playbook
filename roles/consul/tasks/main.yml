@@ -34,38 +34,6 @@
   template: src=start_mesos-consul.sh.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/start_mesos-consul.sh mode=0755
   when: consul_install_mode == "server"
 
-############## setup monit conf
-# monit
-- name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.zk.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
-  when: consul_install_mode == "server"
-
-# monit
-- name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.slave.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
-  when: consul_install_mode == "agent" and mesos_install_mode == "slave"
-
-# monit
-- name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.master.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
-  when: consul_install_mode == "agent" and mesos_install_mode == "master"
-
-# supervisor
-- name: Setup supervisor conf for consul-{{ consul_install_mode }}
-  template: src=supervisord.conf.server.j2 dest=/etc/supervisord.conf mode=0644
-  when: consul_install_mode == "server"
-
-####################################################################
-- name: Consul join for consul-{{ consul_install_mode }}
-  shell: chdir=/opt {{ item }}
-  with_items:
-#    - "/etc/init.d/supervisord restart"
-    - "{{ program_dir }}/monit/monit_control start"
-    - "{{ program_dir }}/consul-{{ consul_install_mode }}/{{ module }}/consul_control start"
-    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
-  ignore_errors: yes
-
-
 ############## XXX: consul agent supervisor configure file setup at roles: mesos slave mode.
 ############## XXX: consul agent server start at roles: mesos slave mode.
 #- name: Setup supervisor conf for consul-{{ consul_install_mode }}

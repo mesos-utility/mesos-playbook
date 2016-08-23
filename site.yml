@@ -8,6 +8,7 @@
     - { role: common, tags: ["common"] }
     - { role: zookeeper, tags: ["zookeeper"] }
     - { role: consul, consul_install_mode: "server", tags: ["server"] }
+    - { role: postwork, tags: ["postwork"] }
 
 - hosts: mesos_masters
   user: root
@@ -16,6 +17,7 @@
     - { role: marathon, tags: ["marathon"] }
     - { role: mesos, mesos_install_mode: "master", tags: ["master"] }
     - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
+    - { role: postwork, tags: ["postwork"] }
 
 - hosts: nginxs
   user: root
@@ -30,3 +32,4 @@
     - { role: mesos,  mesos_install_mode: "slave", tags: ["slave"] }
     - { role: docker, tags: ["docker"] }
     - { role: consul, consul_install_mode: "agent", tags: ["agent"] }
+    - { role: postwork, tags: ["postwork"] }

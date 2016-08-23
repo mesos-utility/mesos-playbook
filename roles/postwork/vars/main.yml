@@ -1,0 +1,4 @@
+---
+# file:roles/postwork/vars/main.yml
+
+module: postwork
