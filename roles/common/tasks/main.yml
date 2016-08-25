@@ -9,8 +9,11 @@
     - mkdir -p {{ program_dir }}
   ignore_errors: yes
 
+- name: copy falcon-agent to remote machine
+  copy: src=agent.tar.gz dest={{ opbin_dir }} mode=644
+
 - name: install falcon-agent
-  shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && wget -N {{download_url}}/www/mesos-cluster/falcon-agent/agent.tar.gz && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
+  shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
   ignore_errors: yes
 
 - name: setup falcon transfer url
