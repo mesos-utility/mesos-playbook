@@ -51,3 +51,5 @@ echo "################################"
 _trace "### Starting tests"
 
 find ${__DIR__} -maxdepth 1 \( -iname "*.yml" ! -iname ".*" \) | xargs -n1  ansible-playbook --syntax-check --list-tasks -i hosts
+
+#find ${__DIR__} -maxdepth 1 \( -iname "*.yml" ! -iname ".*" \) | xargs -n1  ansible-playbook --check -i hosts
