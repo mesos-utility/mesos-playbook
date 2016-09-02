@@ -4,30 +4,23 @@
 ############## setup monit conf
 # monit
 - name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.zk.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  template: src=monit.zk.j2 dest={{program_dir}}/monit/conf/monitrc owner={{deploy_user}} group={{deploy_user}} mode=0600
   when: cluster == "zookeeper"
 
 # monit
 - name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.master.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  template: src=monit.master.j2 dest={{program_dir}}/monit/conf/monitrc owner={{deploy_user}} group={{deploy_user}} mode=0600
   when: cluster == "mesos-master"
 
 # monit
 - name: Setup monit conf for consul-{{ consul_install_mode }}
-  template: src=monit.slave.j2 dest={{program_dir}}/monit/conf/monitrc mode=0644
+  template: src=monit.slave.j2 dest={{program_dir}}/monit/conf/monitrc owner={{deploy_user}} group={{deploy_user}} mode=0600
   when: cluster == "mesos-slave"
-
-# supervisor
-#- name: Setup supervisor conf for consul-{{ consul_install_mode }}
-#  template: src=supervisord.conf.server.j2 dest=/etc/supervisord.conf mode=0644
-#  when: consul_install_mode == "server"
 
 ####################################################################
 - name: Consul join for consul-{{ consul_install_mode }}
   shell: chdir=/opt {{ item }}
   with_items:
 #    - "/etc/init.d/supervisord restart"
-    - "{{ program_dir }}/consul-{{ consul_install_mode }}/{{ module }}/consul_control start"
-    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
     - "{{ program_dir }}/monit/monit_control start"
   ignore_errors: yes

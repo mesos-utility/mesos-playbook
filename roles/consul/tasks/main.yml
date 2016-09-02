@@ -40,11 +40,9 @@
 #  template: src=supervisord.conf.agent.j2 dest=/etc/supervisord.conf.agent mode=0644
 #  when: consul_install_mode == "agent"
 #
-#- name: Consul join for consul-{{ consul_install_mode }}
-#  shell: chdir=/opt {{ item }}
-#  with_items:
-#    - "/etc/init.d/supervisord restart"
-#    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{module}} && ./consul join {{ consul_leader_ip }} "
-#  when: consul_install_mode == "agent"
-#  ignore_errors: yes
-
+- name: Consul join for consul-{{ consul_install_mode }}
+  shell: chdir=/opt {{ item }}
+  with_items:
+    - "{{ program_dir }}/consul-{{ consul_install_mode }}/{{ module }}/consul_control start"
+    - "cd {{ program_dir }}/consul-{{ consul_install_mode }}/{{ module }} && ./consul join {{ consul_leader_ip }} "
+  ignore_errors: yes
