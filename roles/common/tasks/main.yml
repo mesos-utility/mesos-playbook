@@ -10,17 +10,17 @@
   ignore_errors: yes
 
 - name: copy falcon-agent to remote machine
-  copy: src=agent.tar.gz dest={{ opbin_dir }} mode=644
+  copy: src=agent.tar.gz dest={{ opbin_dir }} owner={{deploy_user}} group={{deploy_user}} mode=644
 
 - name: install falcon-agent
   shell: "su -l {{ deploy_user }} -c ' [ -d {{ opbin_dir }}/agent ] || ( cd {{ opbin_dir }} && tar -zxvf agent.tar.gz && rm -rf agent.tar.gz ) '"
   ignore_errors: yes
 
 - name: setup falcon transfer url
-  template: src=cfg.json.j2 dest={{ opbin_dir }}/agent/cfg.json mode=0644
+  template: src=cfg.json.j2 dest={{ opbin_dir }}/agent/cfg.json owner={{deploy_user}} group={{deploy_user}} mode=0644
 
 - name: copy monit to remote machine
-  copy: src=monit.tar.gz dest={{ program_dir }} mode=644
+  copy: src=monit.tar.gz dest={{ program_dir }} owner={{deploy_user}} group={{deploy_user}} mode=644
 
 - name: install monit for all hosts
   shell: chdir=/opt {{ item }}

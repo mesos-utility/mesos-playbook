@@ -11,7 +11,7 @@
 #  ignore_errors: yes
 
 - name: Copy start_marathon.sh to machine for {{ module }}
-  template: src=start_marathon.sh.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/start_marathon.sh mode=0644
+  template: src=start_marathon.sh.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/start_marathon.sh owner={{deploy_user}} group={{deploy_user}} mode=0644
 
 - name: Copy marathon_control to machine for {{ module }}
-  template: src=marathon_control.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/marathon_control mode=0755
+  template: src=marathon_control.j2 dest={{ program_dir }}/{{ module }}/{{ module }}/marathon_control owner={{deploy_user}} group={{deploy_user}} mode=0755

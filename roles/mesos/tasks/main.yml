@@ -16,7 +16,7 @@
   ignore_errors: yes
 
 - name: Copy mesos_control to remote host
-  template: src=mesos_control.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos_control mode=0755
+  template: src=mesos_control.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos_control owner={{deploy_user}} group={{deploy_user}} mode=0755
 
 #- name: Copy mesos_control to remote host
 #  copy: src=../files/mesos_control dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos_control mode=755
@@ -27,7 +27,7 @@
 
 ############## Setup mesos attribute.
 - name: Setup mesos attribute for {{ module }}-{{ mesos_install_mode }}
-  template: src=mesos.conf.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos.conf mode=0644
+  template: src=mesos.conf.j2 dest={{ program_dir }}/mesos-{{ mesos_install_mode }}/mesos.conf owner={{deploy_user}} group={{deploy_user}} mode=0644
   when: mesos_install_mode == "slave"
 
 ####################################################################

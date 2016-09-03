@@ -5,7 +5,7 @@
 ############## install consul module
 # consul
 - name: copy consul to remote machine
-  copy: src=consul.tar.gz dest={{ program_dir }} mode=644
+  copy: src=consul.tar.gz dest={{ program_dir }} owner={{deploy_user}} group={{deploy_user}} mode=644
 
 - name: Install consul for consul-{{ consul_install_mode }}
   shell: chdir=/opt {{ item }}
@@ -17,7 +17,7 @@
 ############## setup for server
 # mesos-consul
 - name: copy mesos-consul to remote machine
-  copy: src=mesos-consul.tar.gz dest={{ program_dir }} mode=644
+  copy: src=mesos-consul.tar.gz dest={{ program_dir }} owner={{deploy_user}} group={{deploy_user}} mode=644
   when: consul_install_mode == "server"
 
 - name: Install mesos-consul for consul-{{ consul_install_mode }}
@@ -27,11 +27,11 @@
   when: consul_install_mode == "server"
 
 - name: Setup mesos-consul control script.
-  template: src=mesos-consul_control.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/mesos-consul_control mode=0755
+  template: src=mesos-consul_control.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/mesos-consul_control owner={{deploy_user}} group={{deploy_user}} mode=0755
   when: consul_install_mode == "server"
 
 - name: Setup start_mesos-consul control script.
-  template: src=start_mesos-consul.sh.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/start_mesos-consul.sh mode=0755
+  template: src=start_mesos-consul.sh.j2 dest={{ program_dir }}/mesos-consul/mesos-consul/start_mesos-consul.sh owner={{deploy_user}} group={{deploy_user}} mode=0755
   when: consul_install_mode == "server"
 
 ############## XXX: consul agent supervisor configure file setup at roles: mesos slave mode.
