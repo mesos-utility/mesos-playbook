@@ -37,6 +37,24 @@ if ! command -v ansible-playbook >/dev/null; then
     exit 1
 fi
 
+function lsb_release() {
+python << END
+import platform;
+
+version = ""
+system = platform.system();
+release = platform.release();
+if system == "Darwin":
+    ver = platform.mac_ver();
+    version = "%s %s %s" % (system, ver[0], ver[2])
+else:
+    ver = platform.linux_distribution()
+    version = ' '.join(ver)
+
+print version
+END
+}
+
 echo "################################"
 echo "Build Information"
 echo "Directory: ${__DIR__}"
@@ -44,7 +62,7 @@ echo "Filename: ${__FILE__}"
 echo "Version Information:"
 echo "Ansible Version: $(ansible --version)"
 echo "Ansible Playbook Version: $(ansible-playbook --version)"
-echo "Operating System: $(lsb_release -d | awk -F: '{ print $2 }' | tr -d '\t')"
+echo "Operating System: $(lsb_release)"
 echo "Kernel: $(uname -a)"
 echo "################################"
 
